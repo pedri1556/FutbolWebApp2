@@ -1,0 +1,63 @@
+﻿Use cWebView.pkg
+Use cWebPanel.pkg
+Use cWebList.pkg
+Use cWebColumn.pkg
+Use centrenadorDataDictionary.dd
+
+Open entrenador
+
+Object oEntrenadorSelect is a cWebView
+    Set psCaption to "Lista de Entrenadores"
+    Set peViewType to vtSelect
+    
+    // 1. IMPORTANTE: Esto le dice al servidor que ejecute el evento OnShow
+    Set pbServerOnShow to True 
+
+    { WebProperty=Client }
+    Property Boolean pbAllowNoLogin True
+
+    Object oentrenador_DD is a centrenadorDataDictionary
+    End_Object 
+
+    Set Main_DD to oentrenador_DD
+    Set Server  to oentrenador_DD
+
+    Object oWebMainPanel is a cWebPanel
+        Object oEntrenadorList is a cWebList
+            Set pbFillHeight to True
+            Set Server to oentrenador_DD
+            Set piOrdering to 1 
+
+            Object oentrenador_Nombre is a cWebColumn
+                Entry_Item entrenador.Nombre
+                Set psCaption to "Nombre del Entrenador"
+                Set piWidth to 300
+            End_Object 
+        End_Object
+    End_Object 
+
+    // Cambiamos a este evento que es más "agresivo" al cargar la página
+    Procedure OnShow
+        Integer iContador
+        Forward Send OnShow
+        
+        Move 0 to iContador
+        Send Clear of oentrenador_DD
+        Send Find of oentrenador_DD FIRST_RECORD 1
+        While (Found)
+            Increment iContador
+            Send Find of oentrenador_DD NEXT_RECORD 1
+        Loop
+        
+        // Si no sale el InfoBox, usaremos un Error de usuario para forzar la ventana
+        If (iContador = 0) Begin
+            Send UserError "El motor no encuentra datos. Revisa permisos de la carpeta Data." "DEBUG"
+        End
+        Else Begin
+            Send ShowInfoBox ("¡Éxito! Se han encontrado " + String(iContador) + " registros.")
+        End
+        
+        Send GridRefresh of oEntrenadorList
+    End_Procedure
+
+End_Object

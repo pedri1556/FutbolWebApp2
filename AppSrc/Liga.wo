@@ -1,0 +1,64 @@
+﻿Use cWebView.pkg
+Use cWebPanel.pkg
+Use cWebForm.pkg
+Use cWebGroup.pkg
+
+Use cligaDataDictionary.dd
+
+Object oLiga is a cWebView
+    Set piMaxWidth to 700
+    Set psCaption to "Detalle de la Liga"
+    Set peViewType to vtZoom
+
+    Object oliga_DD is a cligaDataDictionary
+    End_Object 
+
+    Set Main_DD to oliga_DD
+    Set Server  to oliga_DD
+
+    Object oWebMainPanel is a cWebPanel
+        Set piColumnCount to 12
+
+        Object oDatosGenerales is a cWebGroup
+            Set psCaption to "Información de la Competición"
+            Set piColumnCount to 12
+
+            Object oligaID is a cWebForm
+                Entry_Item liga.ID
+                Set piColumnSpan to 3
+                Set psLabel to "ID:"
+                Set pbEnabled to False
+            End_Object 
+
+            Object oligaNombre is a cWebForm
+                Entry_Item liga.Nombre
+                Set piColumnSpan to 9
+                Set psLabel to "Nombre de la Liga:"
+            End_Object 
+
+            Object oligaPais is a cWebForm
+                Entry_Item liga.Pais
+                Set piColumnSpan to 12
+                Set psLabel to "País:"
+            End_Object 
+        End_Object
+
+        Object oDatosConfiguracion is a cWebGroup
+            Set psCaption to "Configuración de Equipos"
+            Set piColumnCount to 12
+
+            Object oligaEquipos is a cWebForm
+                Entry_Item liga.Equipos
+                Set piColumnSpan to 6
+                Set psLabel to "Equipos Actuales:"
+                Set pbEnabled to False
+            End_Object 
+
+            Object oligaEquiposMax is a cWebForm
+                Entry_Item liga.EquiposMax
+                Set piColumnSpan to 6
+                Set psLabel to "Límite de Equipos:"
+            End_Object 
+        End_Object
+    End_Object 
+End_Object

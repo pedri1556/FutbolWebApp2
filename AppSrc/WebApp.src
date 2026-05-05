@@ -1,0 +1,74 @@
+﻿Use AllWebAppClasses.pkg
+Use cConnection.pkg
+Use cWebMenuItem.pkg
+Use cWebSessionManager.pkg 
+
+Object oApplication is a cApplication
+    Object oConnection is a cConnection
+        Use LoginEncryption.pkg
+    End_Object
+End_Object
+
+Object oWebApp is a cWebApp
+    Set psTheme to "Df_Material"
+    Set peAlignView to alignCenter
+    Set peApplicationStyle to wvsDesktop   
+    Set peLoginMode to lmLoginNone 
+
+    // Registro previo de objetos para evitar errores de "referencia no resuelta"
+    Register_Object oDashboard
+    Register_Object oEntrenadorSelect
+    Register_Object oJugadorSelect
+    Register_Object oEquipoSelect
+    Register_Object oLigaSelect
+    Register_Object oPosicionSelect
+
+    // GESTOR DE SESIÓN: Bypass total de seguridad para evitar Errores 75/4306
+    Object oSessionManager is a cWebSessionManager
+        Function CheckAccess String sMemberName Returns Boolean
+            Function_Return True
+        End_Function
+    End_Object
+
+    // PANEL SUPERIOR (MENÚ)
+    Object oHeaderPanel is a cWebPanel
+        Set peRegion to prTop
+        
+        Object oMenuButton is a cWebMenuButton
+            // BOTÓN INICIO: Corregido para evitar Error 4402
+            Object oDashboard_itm is a cWebMenuItem
+                Set psCaption to "Inicio"
+                Procedure OnClick
+                    // Usamos Show en lugar de NavigatePath para modo Desktop
+                    Send Show of oDashboard 
+                End_Procedure
+            End_Object
+        End_Object
+    End_Object
+
+    // RECURSOS Y COMPONENTES DEL SISTEMA
+    Use WebResourceManager.wo
+    
+    // VISTAS DE DETALLE (ZOOM)
+    Use Entrenador.wo
+    Use Jugador.wo
+    Use Equipo.wo
+    Use Liga.wo
+    Use Posicion.wo
+
+    // VISTAS DE SELECCIÓN (LISTAS)
+    Use EntrenadorSelect.wo
+    Use JugadorSelect.wo
+    Use EquipoSelect.wo
+    Use LigaSelect.wo
+    Use PosicionSelect.wo
+    
+    // El Dashboard se incluye al final para asegurar que conoce todos los objetos anteriores
+    Use Dashboard.wo
+
+    // Vista que aparece al arrancar
+    Set phoDefaultView to oDashboard
+End_Object
+
+// Arrancamos la maquinaria
+Send StartWebApp of oWebApp

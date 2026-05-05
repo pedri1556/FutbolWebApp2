@@ -1,0 +1,86 @@
+﻿// C:\DataFlex Projects\FutbolWebApp2\AppSrc\Entrenador.wo
+Use cWebView.pkg
+Use cWebPanel.pkg
+Use cWebForm.pkg
+Use cWebGroup.pkg
+
+Use cligaDataDictionary.dd
+Use cequipoDataDictionary.dd
+Use centrenadorDataDictionary.dd
+
+Object oEntrenador is a cWebView
+    Set piMaxWidth to 700
+    Set psCaption to "Ficha del Entrenador"
+    Set peViewType to vtZoom // Define que es la vista de detalle
+
+    // Diccionarios de Datos (DDO)
+    Object oliga_DD is a cligaDataDictionary
+    End_Object 
+
+    Object oequipo_DD is a cequipoDataDictionary
+        Set DDO_Server to oliga_DD
+    End_Object 
+
+    Object oentrenador_DD is a centrenadorDataDictionary
+        Set DDO_Server to oequipo_DD
+    End_Object 
+
+    Set Main_DD to oentrenador_DD
+    Set Server  to oentrenador_DD
+
+    Object oWebMainPanel is a cWebPanel
+        Set piColumnCount to 12
+
+        // Grupo: Identidad
+        Object oDatosPersonales is a cWebGroup
+            Set psCaption to "Datos Personales"
+            Set piColumnCount to 12
+
+            Object oentrenadorID is a cWebForm
+                Entry_Item entrenador.ID
+                Set piColumnSpan to 3
+                Set psLabel to "ID:"
+                Set pbEnabled to False // Es AUTO_INCREMENT en MySQL
+            End_Object 
+
+            Object oentrenadorNombre is a cWebForm
+                Entry_Item entrenador.Nombre
+                Set piColumnSpan to 9
+                Set psLabel to "Nombre:"
+            End_Object 
+
+            Object oentrenadorApellido is a cWebForm
+                Entry_Item entrenador.Apellido
+                Set piColumnSpan to 12
+                Set psLabel to "Apellido:"
+            End_Object 
+
+            Object oentrenadorNacionalidad is a cWebForm
+                Entry_Item entrenador.Nacionalidad
+                Set piColumnSpan to 12
+                Set psLabel to "Nacionalidad:"
+            End_Object 
+        End_Object
+
+        // Grupo: Cargo en el Club
+        Object oCargoGrupo is a cWebGroup
+            Set psCaption to "Equipo Actual"
+            Set piColumnCount to 12
+
+            Object oequipoNombre is a cWebForm
+                Entry_Item equipo.Nombre
+                Set piColumnSpan to 12
+                Set psLabel to "Dirige al:"
+                Set pbPromptButton to True // Activa la lista de búsqueda de equipos
+            End_Object 
+            
+            Object oligaNombre is a cWebForm
+                Entry_Item liga.Nombre
+                Set piColumnSpan to 12
+                Set psLabel to "Competición:"
+                Set pbEnabled to False // Solo lectura, viene de la relación equipo-liga
+            End_Object
+        End_Object 
+    End_Object 
+
+End_Object

@@ -1,0 +1,56 @@
+﻿Use cWebView.pkg
+Use cWebPanel.pkg
+Use cWebList.pkg
+Use cWebColumn.pkg
+Use cposicionDataDictionary.dd
+
+Open posicion
+
+Object oPosicionSelect is a cWebView
+    Set psCaption to "Lista de Posiciones"
+    Set peViewType to vtSelect
+    Set pbServerOnShow to True 
+
+    { WebProperty=Client }
+    Property Boolean pbAllowNoLogin True
+
+    Object oposicion_DD is a cposicionDataDictionary
+    End_Object 
+
+    Set Main_DD to oposicion_DD
+    Set Server  to oposicion_DD
+
+    Object oWebMainPanel is a cWebPanel
+        Object oPosicionList is a cWebList
+            Set pbFillHeight to True
+            Set Server to oposicion_DD
+            Set piOrdering to 1 
+
+            Object oposicion_Nombre is a cWebColumn
+                Entry_Item posicion.Nombre
+                Set psCaption to "Posición"
+                Set piWidth to 300
+            End_Object 
+        End_Object
+    End_Object 
+
+    Procedure OnShow
+        Integer iContador
+        Forward Send OnShow
+        Move 0 to iContador
+        Send Clear of oposicion_DD
+        Send Find of oposicion_DD FIRST_RECORD 1
+        While (Found)
+            Increment iContador
+            Send Find of oposicion_DD NEXT_RECORD 1
+        Loop
+        
+        If (iContador = 0) Begin
+            Send UserError "No se encuentran Posiciones." "DEBUG"
+        End
+        Else Begin
+            Send ShowInfoBox ("¡Éxito! Encontradas " + String(iContador) + " posiciones.")
+        End
+        Send GridRefresh of oPosicionList
+    End_Procedure
+End_Object

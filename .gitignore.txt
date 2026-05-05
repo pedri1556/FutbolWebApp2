@@ -1,0 +1,19 @@
+# Carpetas de sistema y bloqueos
+/Programs/*.exe
+/Programs/*.map
+/IdeSrc/
+*.loc
+*.swp
+
+# Datos y motor
+/AppHtml/DfEngine/
+/AppHtml/DfResource/
+/Data/*.k*
+/Data/*.vld
+/Data/*.log
+/Data/*.bak
+
+# Archivos temporales
+*.tmp
+*.o
+*.pht

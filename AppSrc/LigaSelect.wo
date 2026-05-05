@@ -1,0 +1,56 @@
+﻿Use cWebView.pkg
+Use cWebPanel.pkg
+Use cWebList.pkg
+Use cWebColumn.pkg
+Use cligaDataDictionary.dd
+
+Open liga
+
+Object oLigaSelect is a cWebView
+    Set psCaption to "Lista de Ligas"
+    Set peViewType to vtSelect
+    Set pbServerOnShow to True 
+
+    { WebProperty=Client }
+    Property Boolean pbAllowNoLogin True
+
+    Object oliga_DD is a cligaDataDictionary
+    End_Object 
+
+    Set Main_DD to oliga_DD
+    Set Server  to oliga_DD
+
+    Object oWebMainPanel is a cWebPanel
+        Object oLigaList is a cWebList
+            Set pbFillHeight to True
+            Set Server to oliga_DD
+            Set piOrdering to 1 
+
+            Object oliga_Nombre is a cWebColumn
+                Entry_Item liga.Nombre
+                Set psCaption to "Nombre de la Liga"
+                Set piWidth to 300
+            End_Object 
+        End_Object
+    End_Object 
+
+    Procedure OnShow
+        Integer iContador
+        Forward Send OnShow
+        Move 0 to iContador
+        Send Clear of oliga_DD
+        Send Find of oliga_DD FIRST_RECORD 1
+        While (Found)
+            Increment iContador
+            Send Find of oliga_DD NEXT_RECORD 1
+        Loop
+        
+        If (iContador = 0) Begin
+            Send UserError "No se encuentran Ligas." "DEBUG"
+        End
+        Else Begin
+            Send ShowInfoBox ("¡Éxito! Encontradas " + String(iContador) + " ligas.")
+        End
+        Send GridRefresh of oLigaList
+    End_Procedure
+End_Object

@@ -1,0 +1,45 @@
+﻿Use cWebView.pkg
+Use cWebPanel.pkg
+Use cWebForm.pkg
+Use cWebGroup.pkg
+
+Use cligaDataDictionary.dd
+Use cequipoDataDictionary.dd
+
+Object oEquipo is a cWebView
+    Set psCaption to "Ficha del Equipo"
+    Set peViewType to vtZoom
+
+    Object oliga_DD is a cligaDataDictionary
+    End_Object 
+
+    Object oequipo_DD is a cequipoDataDictionary
+        Set DDO_Server to oliga_DD
+    End_Object 
+
+    Set Main_DD to oequipo_DD
+    Set Server  to oequipo_DD
+
+    Object oWebMainPanel is a cWebPanel
+        Object oDatosEquipo is a cWebGroup
+            Set psCaption to "Información del Club"
+            
+            Object oequipoID is a cWebForm
+                Entry_Item equipo.ID
+                Set psLabel to "ID:"
+                Set pbEnabled to False
+            End_Object 
+
+            Object oequipoNombre is a cWebForm
+                Entry_Item equipo.Nombre
+                Set psLabel to "Nombre:"
+            End_Object 
+
+            Object oligaNombre is a cWebForm
+                Entry_Item liga.Nombre
+                Set psLabel to "Liga:"
+                Set pbPromptButton to True 
+            End_Object
+        End_Object
+    End_Object 
+End_Object

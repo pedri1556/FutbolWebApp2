@@ -1,0 +1,140 @@
+[Workspace]
+CurrentProject=WebApp.src
+Location=C:\DataFlex Projects\FutbolWebApp2\IdeSrc\pedro_Studio.dsk
+CreateNew=3
+[TabWindows]
+GroupCount=1
+HorizontalGroups=1
+[TabGroup0]
+GroupSize=40
+SelectedTab=9
+[Window0]
+Filename=Workspace Dashboard
+ViewType=101
+Top=26
+Left=0
+Bottom=603
+Right=1317
+TabIndex=0
+TabGroup=0
+[Window1]
+Filename=C:\DataFlex Projects\FutbolWebApp2\AppSrc\Dashboard.wo
+ViewType=1
+Top=26
+Left=0
+Bottom=603
+Right=1317
+CursorLine=80
+CursorColumn=10
+TabIndex=2
+TabGroup=0
+[Window2]
+Filename=C:\DataFlex Projects\FutbolWebApp2\AppSrc\Equipo.wo
+ViewType=1
+Top=26
+Left=0
+Bottom=603
+Right=1317
+CursorLine=7
+CursorColumn=0
+TabIndex=5
+TabGroup=0
+[Window3]
+Filename=C:\DataFlex Projects\FutbolWebApp2\AppSrc\Liga.wo
+ViewType=1
+Top=26
+Left=0
+Bottom=603
+Right=1317
+CursorLine=63
+CursorColumn=10
+TabIndex=7
+TabGroup=0
+[Window4]
+Filename=C:\DataFlex Projects\FutbolWebApp2\AppSrc\Entrenador.wo
+ViewType=1
+Top=26
+Left=0
+Bottom=603
+Right=1317
+CursorLine=0
+CursorColumn=0
+TabIndex=11
+TabGroup=0
+[Window5]
+Filename=C:\DataFlex Projects\FutbolWebApp2\AppSrc\WebApp.src
+ViewType=1
+Top=26
+Left=0
+Bottom=603
+Right=1317
+CursorLine=73
+CursorColumn=27
+TabIndex=1
+TabGroup=0
+[Window6]
+Filename=C:\DataFlex Projects\FutbolWebApp2\AppSrc\EntrenadorSelect.wo
+ViewType=1
+Top=26
+Left=0
+Bottom=603
+Right=1317
+CursorLine=62
+CursorColumn=10
+TabIndex=10
+TabGroup=0
+[Window7]
+Filename=C:\DataFlex Projects\FutbolWebApp2\AppSrc\Jugador.wo
+ViewType=1
+Top=26
+Left=0
+Bottom=603
+Right=1317
+CursorLine=11
+CursorColumn=0
+TabIndex=3
+TabGroup=0
+[Window8]
+Filename=C:\DataFlex Projects\FutbolWebApp2\AppSrc\JugadorSelect.wo
+ViewType=1
+Top=26
+Left=0
+Bottom=603
+Right=1317
+CursorLine=55
+CursorColumn=10
+TabIndex=4
+TabGroup=0
+[Window9]
+Filename=C:\DataFlex Projects\FutbolWebApp2\AppSrc\EquipoSelect.wo
+ViewType=1
+Top=26
+Left=0
+Bottom=603
+Right=1317
+CursorLine=55
+CursorColumn=10
+TabIndex=6
+TabGroup=0
+[Window10]
+Filename=C:\DataFlex Projects\FutbolWebApp2\AppSrc\LigaSelect.wo
+ViewType=1
+Top=26
+Left=0
+Bottom=603
+Right=1317
+CursorLine=55
+CursorColumn=10
+TabIndex=8
+TabGroup=0
+[Window11]
+Filename=C:\DataFlex Projects\FutbolWebApp2\AppSrc\PosicionSelect.wo
+ViewType=1
+Top=26
+Left=0
+Bottom=603
+Right=1317
+CursorLine=55
+CursorColumn=10
+TabIndex=9
+TabGroup=0
