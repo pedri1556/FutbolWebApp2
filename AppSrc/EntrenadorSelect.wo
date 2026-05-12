@@ -1,62 +1,93 @@
-﻿Use cWebView.pkg
+﻿// EntrenadorSelect.wo  Lista de Entrenadores (vtSelect)
+Use cWebView.pkg
 Use cWebPanel.pkg
 Use cWebList.pkg
 Use cWebColumn.pkg
+Use cWebButton.pkg
 Use centrenadorDataDictionary.dd
-
-Open entrenador
+Use cequipoDataDictionary.dd
+Use cligaDataDictionary.dd
 
 Object oEntrenadorSelect is a cWebView
-    Set psCaption to "Lista de Entrenadores"
-    Set peViewType to vtSelect
-    
-    // 1. IMPORTANTE: Esto le dice al servidor que ejecute el evento OnShow
-    Set pbServerOnShow to True 
+    Set psCaption      to "Entrenadores"
+    Set peViewType     to vtSelect
+    Set pbServerOnShow to True
 
     { WebProperty=Client }
     Property Boolean pbAllowNoLogin True
 
+    Object oliga_DD is a cligaDataDictionary
+    End_Object
+
+    Object oequipo_DD is a cequipoDataDictionary
+        Set DDO_Server to oliga_DD
+    End_Object
+
     Object oentrenador_DD is a centrenadorDataDictionary
-    End_Object 
+        Set DDO_Server to oequipo_DD
+    End_Object
 
     Set Main_DD to oentrenador_DD
     Set Server  to oentrenador_DD
 
     Object oWebMainPanel is a cWebPanel
-        Object oEntrenadorList is a cWebList
-            Set pbFillHeight to True
-            Set Server to oentrenador_DD
-            Set piOrdering to 1 
+        Set piColumnCount to 12
 
-            Object oentrenador_Nombre is a cWebColumn
-                Entry_Item entrenador.Nombre
-                Set psCaption to "Nombre del Entrenador"
-                Set piWidth to 300
-            End_Object 
+        Object oBarraTop is a cWebGroup
+            Set piColumnCount to 12
+            Set psCSSClass    to "ButtonBar"
+
+            Object oBtnNuevo is a cWebButton
+                Set piColumnSpan    to 2
+                Set psCaption       to "+ Nuevo Entrenador"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Clear of oentrenador_DD
+                    Send Show of oEntrenador
+                End_Procedure
+            End_Object
         End_Object
-    End_Object 
 
-    // Cambiamos a este evento que es más "agresivo" al cargar la página
+        Object oEntrenadorList is a cWebList
+            Set piColumnSpan to 12
+            Set pbFillHeight to True
+            Set Server       to oentrenador_DD
+            Set piOrdering   to 1
+
+            Procedure OnSelect String sRowId
+                Forward Send OnSelect sRowId
+                Send Show of oEntrenador
+            End_Procedure
+
+            Object oColNombre is a cWebColumn
+                Entry_Item entrenador.Nombre
+                Set psCaption to "Nombre"
+                Set piWidth   to 180
+            End_Object
+
+            Object oColApellido is a cWebColumn
+                Entry_Item entrenador.Apellido
+                Set psCaption to "Apellido"
+                Set piWidth   to 180
+            End_Object
+
+            Object oColNacionalidad is a cWebColumn
+                Entry_Item entrenador.Nacionalidad
+                Set psCaption to "Nacionalidad"
+                Set piWidth   to 130
+            End_Object
+
+            Object oColEquipo is a cWebColumn
+                Entry_Item equipo.Nombre
+                Set psCaption to "Equipo"
+                Set piWidth   to 180
+            End_Object
+        End_Object
+
+    End_Object
+
     Procedure OnShow
-        Integer iContador
         Forward Send OnShow
-        
-        Move 0 to iContador
-        Send Clear of oentrenador_DD
-        Send Find of oentrenador_DD FIRST_RECORD 1
-        While (Found)
-            Increment iContador
-            Send Find of oentrenador_DD NEXT_RECORD 1
-        Loop
-        
-        // Si no sale el InfoBox, usaremos un Error de usuario para forzar la ventana
-        If (iContador = 0) Begin
-            Send UserError "El motor no encuentra datos. Revisa permisos de la carpeta Data." "DEBUG"
-        End
-        Else Begin
-            Send ShowInfoBox ("¡Éxito! Se han encontrado " + String(iContador) + " registros.")
-        End
-        
         Send GridRefresh of oEntrenadorList
     End_Procedure
 

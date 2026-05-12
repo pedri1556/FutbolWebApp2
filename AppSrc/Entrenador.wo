@@ -1,29 +1,30 @@
-﻿// C:\DataFlex Projects\FutbolWebApp2\AppSrc\Entrenador.wo
+﻿// Entrenador.wo  Ficha del Entrenador (vtZoom) con CRUD completo
 Use cWebView.pkg
 Use cWebPanel.pkg
 Use cWebForm.pkg
 Use cWebGroup.pkg
+Use cWebButton.pkg
 
 Use cligaDataDictionary.dd
 Use cequipoDataDictionary.dd
 Use centrenadorDataDictionary.dd
 
 Object oEntrenador is a cWebView
-    Set piMaxWidth to 700
-    Set psCaption to "Ficha del Entrenador"
-    Set peViewType to vtZoom // Define que es la vista de detalle
+    Set piMaxWidth  to 700
+    Set psCaption   to "Ficha del Entrenador"
+    Set peViewType  to vtZoom
 
-    // Diccionarios de Datos (DDO)
+    // Cadena de DD: liga equipo entrenador
     Object oliga_DD is a cligaDataDictionary
-    End_Object 
+    End_Object
 
     Object oequipo_DD is a cequipoDataDictionary
         Set DDO_Server to oliga_DD
-    End_Object 
+    End_Object
 
     Object oentrenador_DD is a centrenadorDataDictionary
         Set DDO_Server to oequipo_DD
-    End_Object 
+    End_Object
 
     Set Main_DD to oentrenador_DD
     Set Server  to oentrenador_DD
@@ -31,56 +32,113 @@ Object oEntrenador is a cWebView
     Object oWebMainPanel is a cWebPanel
         Set piColumnCount to 12
 
-        // Grupo: Identidad
-        Object oDatosPersonales is a cWebGroup
-            Set psCaption to "Datos Personales"
+        Object oGrpPersonal is a cWebGroup
+            Set psCaption     to "Datos Personales"
             Set piColumnCount to 12
 
             Object oentrenadorID is a cWebForm
                 Entry_Item entrenador.ID
                 Set piColumnSpan to 3
-                Set psLabel to "ID:"
-                Set pbEnabled to False // Es AUTO_INCREMENT en MySQL
-            End_Object 
+                Set psLabel      to "ID:"
+                Set pbEnabled    to False
+            End_Object
 
             Object oentrenadorNombre is a cWebForm
                 Entry_Item entrenador.Nombre
                 Set piColumnSpan to 9
-                Set psLabel to "Nombre:"
-            End_Object 
+                Set psLabel      to "Nombre:"
+            End_Object
 
             Object oentrenadorApellido is a cWebForm
                 Entry_Item entrenador.Apellido
                 Set piColumnSpan to 12
-                Set psLabel to "Apellido:"
-            End_Object 
+                Set psLabel      to "Apellido:"
+            End_Object
 
             Object oentrenadorNacionalidad is a cWebForm
                 Entry_Item entrenador.Nacionalidad
                 Set piColumnSpan to 12
-                Set psLabel to "Nacionalidad:"
-            End_Object 
+                Set psLabel      to "Nacionalidad:"
+            End_Object
         End_Object
 
-        // Grupo: Cargo en el Club
-        Object oCargoGrupo is a cWebGroup
-            Set psCaption to "Equipo Actual"
+        Object oGrpEquipo is a cWebGroup
+            Set psCaption     to "Equipo que Dirige"
             Set piColumnCount to 12
 
+            // Lookup de equipo vía DD (pbPromptButton activa búsqueda)
             Object oequipoNombre is a cWebForm
                 Entry_Item equipo.Nombre
-                Set piColumnSpan to 12
-                Set psLabel to "Dirige al:"
-                Set pbPromptButton to True // Activa la lista de búsqueda de equipos
-            End_Object 
-            
+                Set piColumnSpan   to 12
+                Set psLabel        to "Equipo:"
+                Set pbPromptButton to True
+            End_Object
+
+            // Solo lectura se rellena automáticamente al seleccionar equipo
             Object oligaNombre is a cWebForm
                 Entry_Item liga.Nombre
                 Set piColumnSpan to 12
-                Set psLabel to "Competición:"
-                Set pbEnabled to False // Solo lectura, viene de la relación equipo-liga
+                Set psLabel      to "Competición:"
+                Set pbEnabled    to False
             End_Object
-        End_Object 
-    End_Object 
+        End_Object
 
+        //  Botones 
+        Object oGrpBotones is a cWebGroup
+            Set piColumnCount to 12
+            Set psCSSClass    to "ButtonBar"
+
+            Object oBtnNuevo is a cWebButton
+                Set piColumnSpan    to 3
+                Set psCaption       to "Nuevo"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Clear of oentrenador_DD
+                End_Procedure
+            End_Object
+
+            Object oBtnGuardar is a cWebButton
+                Set piColumnSpan    to 3
+                Set psCaption       to "Guardar"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Request_Save of oentrenador_DD
+                    If (Err) Begin
+                        Send ShowInfoBox "Error al guardar. Verifica que has seleccionado un Equipo."
+                    End
+                    Else Begin
+                        Send ShowInfoBox "Entrenador guardado correctamente."
+                    End
+                End_Procedure
+            End_Object
+
+            Object oBtnEliminar is a cWebButton
+                Set piColumnSpan    to 3
+                Set psCaption       to "Eliminar"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    If (entrenador.ID > 0) Begin
+                        Send Request_Delete of oentrenador_DD
+                        If (Err) Begin
+                            Send ShowInfoBox "Error al eliminar el entrenador."
+                        End
+                        Else Begin
+                            Send ShowInfoBox "Entrenador eliminado."
+                            Send Clear of oentrenador_DD
+                        End
+                    End
+                End_Procedure
+            End_Object
+
+            Object oBtnVolver is a cWebButton
+                Set piColumnSpan    to 3
+                Set psCaption       to "Volver"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Show of oEntrenadorSelect
+                End_Procedure
+            End_Object
+        End_Object
+
+    End_Object
 End_Object

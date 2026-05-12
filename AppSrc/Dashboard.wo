@@ -1,81 +1,80 @@
-﻿// C:\DataFlex Projects\FutbolWebApp2\AppSrc\Dashboard.wo
+﻿// Dashboard.wo
 Use cWebView.pkg
 Use cWebPanel.pkg
 Use cWebGroup.pkg
 Use cWebHtmlBox.pkg
 
 Object oDashboard is a cWebView
-    Set psCaption to "Dashboard Fútbol"
-    
+    Set psCaption to "Dashboard - Gestor de Fútbol"
+
     { WebProperty=Client }
     Property Boolean pbAllowNoLogin True
 
-    Object oTiles_grp is a cWebGroup
-        Set piColumnSpan to 12
+    Object oTilesGrp is a cWebGroup
+        Set piColumnSpan  to 12
         Set piColumnCount to 12
-        Set psCSSClass to "TilesGroup"
+        Set psCSSClass    to "TilesGroup"
 
-        // En modo Desktop NO necesitamos WebRegisterPath si usamos 'Send Show'
-
-        Object oWelcomeTile is a cWebHtmlBox
+        Object oWelcome is a cWebHtmlBox
             Set piColumnSpan to 12
-            Set psCSSClass to "Tile Light"
-            Set psHtml to '<div class="WebCon_Sizer"><div class="Tile_Title">Bienvenido</div><div class="Tile_Subtitle">Gestor Integral de Fútbol</div></div>'
+            Set psCSSClass   to "Tile Light"
+            Set psHtml to '<div class="WebCon_Sizer"><div class="Tile_Title">Gestor de Fútbol</div><div class="Tile_Subtitle">Selecciona una sección para comenzar</div></div>'
         End_Object
 
-        // ENTRENADORES
-        Object oEntrenadoresTile is a cWebHtmlBox
+        // LIGAS 
+        Object oLigaTile is a cWebHtmlBox
             Set pbServerOnClick to True
-            Set piColumnSpan to 6
-            Set psCSSClass to "Tile Dark"
-            Set psHtml to '<div class="WebCon_Sizer" data-ServerOnClick="openview"><div Class="Tile_Title">Entrenadores</div></div>'
-            Procedure OnClick String sId String sParam
-                Send Show of oEntrenadorSelect // Cambio clave: de NavigatePath a Show
-            End_Procedure
-        End_Object
-
-        // JUGADORES
-        Object oJugadoresTile is a cWebHtmlBox
-            Set pbServerOnClick to True
-            Set piColumnSpan to 6
-            Set psCSSClass to "Tile LightAlternate"
-            Set psHtml to '<div class="WebCon_Sizer" data-ServerOnClick="openview"><div Class="Tile_Title">Jugadores</div></div>'
-            Procedure OnClick String sId String sParam
-                Send Show of oJugadorSelect
-            End_Procedure
-        End_Object
-
-        // EQUIPOS
-        Object oEquiposTile is a cWebHtmlBox
-            Set pbServerOnClick to True
-            Set piColumnSpan to 4
-            Set psCSSClass to "Tile DarkAlternate"
-            Set psHtml to '<div class="WebCon_Sizer" data-ServerOnClick="openview"><div Class="Tile_Title">Equipos</div></div>'
-            Procedure OnClick String sId String sParam
-                Send Show of oEquipoSelect
-            End_Procedure
-        End_Object
-
-        // LIGAS
-        Object oLigasTile is a cWebHtmlBox
-            Set pbServerOnClick to True
-            Set piColumnSpan to 4
-            Set psCSSClass to "Tile Light"
-            Set psHtml to '<div class="WebCon_Sizer" data-ServerOnClick="openview"><div Class="Tile_Title">Ligas</div></div>'
+            Set piColumnSpan    to 4
+            Set psCSSClass      to "Tile Dark"
+            Set psHtml to '<div class="WebCon_Sizer"><div class="Tile_Title">­Ligas</div></div>'
             Procedure OnClick String sId String sParam
                 Send Show of oLigaSelect
             End_Procedure
         End_Object
 
-        // POSICIONES
-        Object oPosicionesTile is a cWebHtmlBox
+        // EQUIPOS 
+        Object oEquipoTile is a cWebHtmlBox
             Set pbServerOnClick to True
-            Set piColumnSpan to 4
-            Set psCSSClass to "Tile Dark"
-            Set psHtml to '<div class="WebCon_Sizer" data-ServerOnClick="openview"><div Class="Tile_Title">Posiciones</div></div>'
+            Set piColumnSpan    to 4
+            Set psCSSClass      to "Tile LightAlternate"
+            Set psHtml to '<div class="WebCon_Sizer"><div class="Tile_Title">Equipos</div></div>'
+            Procedure OnClick String sId String sParam
+                Send Show of oEquipoSelect
+            End_Procedure
+        End_Object
+
+        //  ENTRENADORES 
+        Object oEntrenadorTile is a cWebHtmlBox
+            Set pbServerOnClick to True
+            Set piColumnSpan    to 4
+            Set psCSSClass      to "Tile Dark"
+            Set psHtml to '<div class="WebCon_Sizer"><div class="Tile_Title">Entrenadores</div></div>'
+            Procedure OnClick String sId String sParam
+                Send Show of oEntrenadorSelect
+            End_Procedure
+        End_Object
+
+        //  JUGADORES 
+        Object oJugadorTile is a cWebHtmlBox
+            Set pbServerOnClick to True
+            Set piColumnSpan    to 6
+            Set psCSSClass      to "Tile DarkAlternate"
+            Set psHtml to '<div class="WebCon_Sizer"><div class="Tile_Title">­Jugadores</div></div>'
+            Procedure OnClick String sId String sParam
+                Send Show of oJugadorSelect
+            End_Procedure
+        End_Object
+
+        //  POSICIONES 
+        Object oPosicionTile is a cWebHtmlBox
+            Set pbServerOnClick to True
+            Set piColumnSpan    to 6
+            Set psCSSClass      to "Tile Light"
+            Set psHtml to '<div class="WebCon_Sizer"><div class="Tile_Title">Posiciones</div></div>'
             Procedure OnClick String sId String sParam
                 Send Show of oPosicionSelect
             End_Procedure
         End_Object
+
     End_Object
 End_Object

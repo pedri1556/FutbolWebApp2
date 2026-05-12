@@ -1,56 +1,87 @@
-﻿Use cWebView.pkg
+﻿// LigaSelect.wo  Lista de Ligas (vtSelect)
+Use cWebView.pkg
 Use cWebPanel.pkg
 Use cWebList.pkg
 Use cWebColumn.pkg
+Use cWebButton.pkg
 Use cligaDataDictionary.dd
 
-Open liga
-
 Object oLigaSelect is a cWebView
-    Set psCaption to "Lista de Ligas"
-    Set peViewType to vtSelect
-    Set pbServerOnShow to True 
+    Set psCaption       to "Ligas"
+    Set peViewType      to vtSelect
+    Set pbServerOnShow  to True
 
     { WebProperty=Client }
     Property Boolean pbAllowNoLogin True
 
     Object oliga_DD is a cligaDataDictionary
-    End_Object 
+    End_Object
 
     Set Main_DD to oliga_DD
     Set Server  to oliga_DD
 
     Object oWebMainPanel is a cWebPanel
-        Object oLigaList is a cWebList
-            Set pbFillHeight to True
-            Set Server to oliga_DD
-            Set piOrdering to 1 
+        Set piColumnCount to 12
 
-            Object oliga_Nombre is a cWebColumn
-                Entry_Item liga.Nombre
-                Set psCaption to "Nombre de la Liga"
-                Set piWidth to 300
-            End_Object 
+        //  Barra de botones superior 
+        Object oBarraTop is a cWebGroup
+            Set piColumnCount to 12
+            Set psCSSClass    to "ButtonBar"
+
+            Object oBtnNueva is a cWebButton
+                Set piColumnSpan    to 2
+                Set psCaption       to "+ Nueva Liga"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Clear of oliga_DD
+                    Send Show of oLiga
+                End_Procedure
+            End_Object
         End_Object
-    End_Object 
+
+        //  Lista 
+        Object oLigaList is a cWebList
+            Set piColumnSpan to 12
+            Set pbFillHeight to True
+            Set Server       to oliga_DD
+            Set piOrdering   to 1
+
+            // Al hacer clic en una fila abre ficha
+            Procedure OnSelect String sRowId
+                Forward Send OnSelect sRowId
+                Send Show of oLiga
+            End_Procedure
+
+            Object oColNombre is a cWebColumn
+                Entry_Item liga.Nombre
+                Set psCaption to "Nombre"
+                Set piWidth   to 250
+            End_Object
+
+            Object oColPais is a cWebColumn
+                Entry_Item liga.Pais
+                Set psCaption to "País"
+                Set piWidth   to 150
+            End_Object
+
+            Object oColEquipos is a cWebColumn
+                Entry_Item liga.Equipos
+                Set psCaption to "Equipos"
+                Set piWidth   to 80
+            End_Object
+
+            Object oColMax is a cWebColumn
+                Entry_Item liga.EquiposMax
+                Set psCaption to "Mix."
+                Set piWidth   to 80
+            End_Object
+        End_Object
+
+    End_Object
 
     Procedure OnShow
-        Integer iContador
         Forward Send OnShow
-        Move 0 to iContador
-        Send Clear of oliga_DD
-        Send Find of oliga_DD FIRST_RECORD 1
-        While (Found)
-            Increment iContador
-            Send Find of oliga_DD NEXT_RECORD 1
-        Loop
-        
-        If (iContador = 0) Begin
-            Send UserError "No se encuentran Ligas." "DEBUG"
-        End
-        Else Begin
-            Send ShowInfoBox ("¡Éxito! Encontradas " + String(iContador) + " ligas.")
-        End
         Send GridRefresh of oLigaList
     End_Procedure
+
 End_Object

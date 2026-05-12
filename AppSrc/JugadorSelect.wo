@@ -1,56 +1,94 @@
-﻿Use cWebView.pkg
+﻿// JugadorSelect.wo Lista de Jugadores (vtSelect)
+Use cWebView.pkg
 Use cWebPanel.pkg
 Use cWebList.pkg
 Use cWebColumn.pkg
+Use cWebButton.pkg
 Use cjugadorDataDictionary.dd
-
-Open jugador
+Use cequipoDataDictionary.dd
+Use cligaDataDictionary.dd
 
 Object oJugadorSelect is a cWebView
-    Set psCaption to "Lista de Jugadores"
-    Set peViewType to vtSelect
-    Set pbServerOnShow to True 
+    Set psCaption      to "Jugadores"
+    Set peViewType     to vtSelect
+    Set pbServerOnShow to True
 
     { WebProperty=Client }
     Property Boolean pbAllowNoLogin True
 
+    Object oliga_DD is a cligaDataDictionary
+    End_Object
+
+    Object oequipo_DD is a cequipoDataDictionary
+        Set DDO_Server to oliga_DD
+    End_Object
+
     Object ojugador_DD is a cjugadorDataDictionary
-    End_Object 
+        Set DDO_Server to oequipo_DD
+    End_Object
 
     Set Main_DD to ojugador_DD
     Set Server  to ojugador_DD
 
     Object oWebMainPanel is a cWebPanel
-        Object oJugadorList is a cWebList
-            Set pbFillHeight to True
-            Set Server to ojugador_DD
-            Set piOrdering to 1 
+        Set piColumnCount to 12
 
-            Object ojugador_Nombre is a cWebColumn
-                Entry_Item jugador.Nombre
-                Set psCaption to "Nombre del Jugador"
-                Set piWidth to 300
-            End_Object 
+        Object oBarraTop is a cWebGroup
+            Set piColumnCount to 12
+            Set psCSSClass    to "ButtonBar"
+
+            Object oBtnNuevo is a cWebButton
+                Set piColumnSpan    to 2
+                Set psCaption       to "+ Nuevo Jugador"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Clear of ojugador_DD
+                    Send Show of oJugador
+                End_Procedure
+            End_Object
         End_Object
-    End_Object 
+
+        Object oJugadorList is a cWebList
+            Set piColumnSpan to 12
+            Set pbFillHeight to True
+            Set Server       to ojugador_DD
+            Set piOrdering   to 1
+
+            Procedure OnSelect String sRowId
+                Forward Send OnSelect sRowId
+                Send Show of oJugador
+            End_Procedure
+
+            Object oColNombre is a cWebColumn
+                Entry_Item jugador.Nombre
+                Set psCaption to "Nombre"
+                Set piWidth   to 160
+            End_Object
+
+            Object oColApellido is a cWebColumn
+                Entry_Item jugador.Apellido
+                Set psCaption to "Apellido"
+                Set piWidth   to 160
+            End_Object
+
+            Object oColEquipo is a cWebColumn
+                Entry_Item equipo.Nombre
+                Set psCaption to "Equipo"
+                Set piWidth   to 180
+            End_Object
+
+            Object oColLiga is a cWebColumn
+                Entry_Item liga.Nombre
+                Set psCaption to "Liga"
+                Set piWidth   to 150
+            End_Object
+        End_Object
+
+    End_Object
 
     Procedure OnShow
-        Integer iContador
         Forward Send OnShow
-        Move 0 to iContador
-        Send Clear of ojugador_DD
-        Send Find of ojugador_DD FIRST_RECORD 1
-        While (Found)
-            Increment iContador
-            Send Find of ojugador_DD NEXT_RECORD 1
-        Loop
-        
-        If (iContador = 0) Begin
-            Send UserError "No se encuentran Jugadores. Revisa la tabla." "DEBUG"
-        End
-        Else Begin
-            Send ShowInfoBox ("¡Éxito! Encontrados " + String(iContador) + " jugadores.")
-        End
         Send GridRefresh of oJugadorList
     End_Procedure
+
 End_Object

@@ -1,7 +1,8 @@
 ﻿Use AllWebAppClasses.pkg
 Use cConnection.pkg
 Use cWebMenuItem.pkg
-Use cWebSessionManager.pkg 
+Use cWebMenuButton.pkg
+Use cWebSessionManager.pkg
 
 Object oApplication is a cApplication
     Object oConnection is a cConnection
@@ -10,65 +11,96 @@ Object oApplication is a cApplication
 End_Object
 
 Object oWebApp is a cWebApp
-    Set psTheme to "Df_Material"
-    Set peAlignView to alignCenter
-    Set peApplicationStyle to wvsDesktop   
-    Set peLoginMode to lmLoginNone 
+    Set psTheme          to "Df_Material"
+    Set peAlignView      to alignCenter
+    Set peApplicationStyle to wvsDesktop
+    Set peLoginMode      to lmLoginNone
 
-    // Registro previo de objetos para evitar errores de "referencia no resuelta"
     Register_Object oDashboard
+    Register_Object oLigaSelect
+    Register_Object oEquipoSelect
     Register_Object oEntrenadorSelect
     Register_Object oJugadorSelect
-    Register_Object oEquipoSelect
-    Register_Object oLigaSelect
     Register_Object oPosicionSelect
 
-    // GESTOR DE SESIÓN: Bypass total de seguridad para evitar Errores 75/4306
     Object oSessionManager is a cWebSessionManager
         Function CheckAccess String sMemberName Returns Boolean
             Function_Return True
         End_Function
     End_Object
 
-    // PANEL SUPERIOR (MENÚ)
+    // BARRA DE NAVEGACI├ôN SUPERIOR
     Object oHeaderPanel is a cWebPanel
         Set peRegion to prTop
-        
-        Object oMenuButton is a cWebMenuButton
-            // BOTÓN INICIO: Corregido para evitar Error 4402
-            Object oDashboard_itm is a cWebMenuItem
+
+        Object oNavMenu is a cWebMenuButton
+            Set psCaption to "Menu"
+
+            Object oItem_Dashboard is a cWebMenuItem
                 Set psCaption to "Inicio"
                 Procedure OnClick
-                    // Usamos Show en lugar de NavigatePath para modo Desktop
-                    Send Show of oDashboard 
+                    Send Show of oDashboard
+                End_Procedure
+            End_Object
+
+            Object oItem_Liga is a cWebMenuItem
+                Set psCaption to "Ligas"
+                Procedure OnClick
+                    Send Show of oLigaSelect
+                End_Procedure
+            End_Object
+
+            Object oItem_Equipo is a cWebMenuItem
+                Set psCaption to "Equipos"
+                Procedure OnClick
+                    Send Show of oEquipoSelect
+                End_Procedure
+            End_Object
+
+            Object oItem_Entrenador is a cWebMenuItem
+                Set psCaption to "Entrenadores"
+                Procedure OnClick
+                    Send Show of oEntrenadorSelect
+                End_Procedure
+            End_Object
+
+            Object oItem_Jugador is a cWebMenuItem
+                Set psCaption to "Jugadores"
+                Procedure OnClick
+                    Send Show of oJugadorSelect
+                End_Procedure
+            End_Object
+
+            Object oItem_Posicion is a cWebMenuItem
+                Set psCaption to "Posiciones"
+                Procedure OnClick
+                    Send Show of oPosicionSelect
                 End_Procedure
             End_Object
         End_Object
     End_Object
 
-    // RECURSOS Y COMPONENTES DEL SISTEMA
+    // RECURSOS
     Use WebResourceManager.wo
-    
-    // VISTAS DE DETALLE (ZOOM)
+
+    //  VISTAS DE DETALLE (ZOOM) 
+    Use Liga.wo
+    Use Equipo.wo
     Use Entrenador.wo
     Use Jugador.wo
-    Use Equipo.wo
-    Use Liga.wo
     Use Posicion.wo
 
-    // VISTAS DE SELECCIÓN (LISTAS)
+    //  VISTAS DE LISTA (SELECT) 
+    Use LigaSelect.wo
+    Use EquipoSelect.wo
     Use EntrenadorSelect.wo
     Use JugadorSelect.wo
-    Use EquipoSelect.wo
-    Use LigaSelect.wo
     Use PosicionSelect.wo
-    
-    // El Dashboard se incluye al final para asegurar que conoce todos los objetos anteriores
+
+    //  DASHBOARD 
     Use Dashboard.wo
 
-    // Vista que aparece al arrancar
     Set phoDefaultView to oDashboard
 End_Object
 
-// Arrancamos la maquinaria
 Send StartWebApp of oWebApp

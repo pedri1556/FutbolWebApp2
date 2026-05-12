@@ -1,45 +1,118 @@
-﻿Use cWebView.pkg
+﻿// Equipo.wo Ficha de Equipo (vtZoom) con CRUD completo
+Use cWebView.pkg
 Use cWebPanel.pkg
 Use cWebForm.pkg
 Use cWebGroup.pkg
+Use cWebButton.pkg
 
 Use cligaDataDictionary.dd
 Use cequipoDataDictionary.dd
 
 Object oEquipo is a cWebView
-    Set psCaption to "Ficha del Equipo"
-    Set peViewType to vtZoom
+    Set piMaxWidth  to 650
+    Set psCaption   to "Ficha del Equipo"
+    Set peViewType  to vtZoom
 
     Object oliga_DD is a cligaDataDictionary
-    End_Object 
+    End_Object
 
     Object oequipo_DD is a cequipoDataDictionary
         Set DDO_Server to oliga_DD
-    End_Object 
+    End_Object
 
     Set Main_DD to oequipo_DD
     Set Server  to oequipo_DD
 
     Object oWebMainPanel is a cWebPanel
-        Object oDatosEquipo is a cWebGroup
-            Set psCaption to "Información del Club"
-            
+        Set piColumnCount to 12
+
+        Object oGrpClub is a cWebGroup
+            Set psCaption     to "Información del Club"
+            Set piColumnCount to 12
+
             Object oequipoID is a cWebForm
                 Entry_Item equipo.ID
-                Set psLabel to "ID:"
-                Set pbEnabled to False
-            End_Object 
+                Set piColumnSpan to 3
+                Set psLabel      to "ID:"
+                Set pbEnabled    to False
+            End_Object
 
             Object oequipoNombre is a cWebForm
                 Entry_Item equipo.Nombre
-                Set psLabel to "Nombre:"
-            End_Object 
-
-            Object oligaNombre is a cWebForm
-                Entry_Item liga.Nombre
-                Set psLabel to "Liga:"
-                Set pbPromptButton to True 
+                Set piColumnSpan to 9
+                Set psLabel      to "Nombre del Equipo:"
             End_Object
         End_Object
-    End_Object 
+
+        Object oGrpLiga is a cWebGroup
+            Set psCaption     to "Competición"
+            Set piColumnCount to 12
+
+            // pbPromptButton abre el lookup de ligas automaticamente via el DD
+            Object oligaNombre is a cWebForm
+                Entry_Item liga.Nombre
+                Set piColumnSpan    to 12
+                Set psLabel         to "Liga:"
+                Set pbPromptButton  to True
+            End_Object
+        End_Object
+
+        //  Botones
+        Object oGrpBotones is a cWebGroup
+            Set piColumnCount to 12
+            Set psCSSClass    to "ButtonBar"
+
+            Object oBtnNuevo is a cWebButton
+                Set piColumnSpan    to 3
+                Set psCaption       to "Nuevo"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Clear of oequipo_DD
+                End_Procedure
+            End_Object
+
+            Object oBtnGuardar is a cWebButton
+                Set piColumnSpan    to 3
+                Set psCaption       to "Guardar"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Request_Save of oequipo_DD
+                    If (Err) Begin
+                        Send ShowInfoBox "Error al guardar. Verifica que has seleccionado una Liga."
+                    End
+                    Else Begin
+                        Send ShowInfoBox "Equipo guardado correctamente."
+                    End
+                End_Procedure
+            End_Object
+
+            Object oBtnEliminar is a cWebButton
+                Set piColumnSpan    to 3
+                Set psCaption       to "Eliminar"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    If (equipo.ID > 0) Begin
+                        Send Request_Delete of oequipo_DD
+                        If (Err) Begin
+                            Send ShowInfoBox "No se puede eliminar. El equipo tiene jugadores o entrenadores asociados."
+                        End
+                        Else Begin
+                            Send ShowInfoBox "Equipo eliminado."
+                            Send Clear of oequipo_DD
+                        End
+                    End
+                End_Procedure
+            End_Object
+
+            Object oBtnVolver is a cWebButton
+                Set piColumnSpan    to 3
+                Set psCaption       to "Volver"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Show of oEquipoSelect
+                End_Procedure
+            End_Object
+        End_Object
+
+    End_Object
 End_Object

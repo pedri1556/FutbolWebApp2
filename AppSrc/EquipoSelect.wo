@@ -1,56 +1,77 @@
-﻿Use cWebView.pkg
+﻿// EquipoSelect.wo  Lista de Equipos (vtSelect)
+Use cWebView.pkg
 Use cWebPanel.pkg
 Use cWebList.pkg
 Use cWebColumn.pkg
+Use cWebButton.pkg
 Use cequipoDataDictionary.dd
-
-Open equipo
+Use cligaDataDictionary.dd
 
 Object oEquipoSelect is a cWebView
-    Set psCaption to "Lista de Equipos"
-    Set peViewType to vtSelect
-    Set pbServerOnShow to True 
+    Set psCaption      to "Equipos"
+    Set peViewType     to vtSelect
+    Set pbServerOnShow to True
 
     { WebProperty=Client }
     Property Boolean pbAllowNoLogin True
 
+    Object oliga_DD is a cligaDataDictionary
+    End_Object
+
     Object oequipo_DD is a cequipoDataDictionary
-    End_Object 
+        Set DDO_Server to oliga_DD
+    End_Object
 
     Set Main_DD to oequipo_DD
     Set Server  to oequipo_DD
 
     Object oWebMainPanel is a cWebPanel
-        Object oEquipoList is a cWebList
-            Set pbFillHeight to True
-            Set Server to oequipo_DD
-            Set piOrdering to 1 
+        Set piColumnCount to 12
 
-            Object oequipo_Nombre is a cWebColumn
-                Entry_Item equipo.Nombre
-                Set psCaption to "Nombre del Equipo"
-                Set piWidth to 300
-            End_Object 
+        Object oBarraTop is a cWebGroup
+            Set piColumnCount to 12
+            Set psCSSClass    to "ButtonBar"
+
+            Object oBtnNuevo is a cWebButton
+                Set piColumnSpan    to 2
+                Set psCaption       to "+ Nuevo Equipo"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Clear of oequipo_DD
+                    Send Show of oEquipo
+                End_Procedure
+            End_Object
         End_Object
-    End_Object 
+
+        Object oEquipoList is a cWebList
+            Set piColumnSpan to 12
+            Set pbFillHeight to True
+            Set Server       to oequipo_DD
+            Set piOrdering   to 1
+
+            Procedure OnSelect String sRowId
+                Forward Send OnSelect sRowId
+                Send Show of oEquipo
+            End_Procedure
+
+            Object oColNombre is a cWebColumn
+                Entry_Item equipo.Nombre
+                Set psCaption to "Equipo"
+                Set piWidth   to 250
+            End_Object
+
+            Object oColLiga is a cWebColumn
+                Entry_Item liga.Nombre
+                Set psCaption to "Liga"
+                Set piWidth   to 200
+            End_Object
+        End_Object
+
+    End_Object
 
     Procedure OnShow
-        Integer iContador
         Forward Send OnShow
-        Move 0 to iContador
-        Send Clear of oequipo_DD
-        Send Find of oequipo_DD FIRST_RECORD 1
-        While (Found)
-            Increment iContador
-            Send Find of oequipo_DD NEXT_RECORD 1
-        Loop
-        
-        If (iContador = 0) Begin
-            Send UserError "No se encuentran Equipos." "DEBUG"
-        End
-        Else Begin
-            Send ShowInfoBox ("¡Éxito! Encontrados " + String(iContador) + " equipos.")
-        End
         Send GridRefresh of oEquipoList
     End_Procedure
+
 End_Object

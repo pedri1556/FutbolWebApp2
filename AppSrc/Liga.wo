@@ -1,17 +1,28 @@
-﻿Use cWebView.pkg
+﻿// Liga.wo   Ficha de Liga (vtZoom) con CRUD completo
+Use cWebView.pkg
 Use cWebPanel.pkg
 Use cWebForm.pkg
 Use cWebGroup.pkg
+Use cWebButton.pkg
+Use cWebList.pkg
+Use cWebColumn.pkg
 
 Use cligaDataDictionary.dd
+Use cequipoDataDictionary.dd
 
 Object oLiga is a cWebView
-    Set piMaxWidth to 700
-    Set psCaption to "Detalle de la Liga"
-    Set peViewType to vtZoom
+    Set piMaxWidth  to 700
+    Set psCaption   to "Ficha de Liga"
+    Set peViewType  to vtZoom
 
+    // Liga es el servidor; equipo es cliente
     Object oliga_DD is a cligaDataDictionary
-    End_Object 
+    End_Object
+
+    // oequipo_DD como cliente de oliga_DD: solo vería equipos de la liga actual
+    Object oequipo_DD is a cequipoDataDictionary
+        Set DDO_Server to oliga_DD
+    End_Object
 
     Set Main_DD to oliga_DD
     Set Server  to oliga_DD
@@ -19,46 +30,148 @@ Object oLiga is a cWebView
     Object oWebMainPanel is a cWebPanel
         Set piColumnCount to 12
 
-        Object oDatosGenerales is a cWebGroup
-            Set psCaption to "Información de la Competición"
+        // Datos generales 
+        Object oGrpInfo is a cWebGroup
+            Set psCaption     to "Información de la Competición"
             Set piColumnCount to 12
 
             Object oligaID is a cWebForm
                 Entry_Item liga.ID
                 Set piColumnSpan to 3
-                Set psLabel to "ID:"
-                Set pbEnabled to False
-            End_Object 
+                Set psLabel      to "ID:"
+                Set pbEnabled    to False
+            End_Object
 
             Object oligaNombre is a cWebForm
                 Entry_Item liga.Nombre
                 Set piColumnSpan to 9
-                Set psLabel to "Nombre de la Liga:"
-            End_Object 
+                Set psLabel      to "Nombre de la Liga:"
+            End_Object
 
             Object oligaPais is a cWebForm
                 Entry_Item liga.Pais
                 Set piColumnSpan to 12
-                Set psLabel to "País:"
-            End_Object 
+                Set psLabel      to "País:"
+            End_Object
         End_Object
 
-        Object oDatosConfiguracion is a cWebGroup
-            Set psCaption to "Configuración de Equipos"
+        //  Configuracion de equipos 
+        Object oGrpConfigEquipos is a cWebGroup
+            Set psCaption     to "Configuración de Equipos"
             Set piColumnCount to 12
 
             Object oligaEquipos is a cWebForm
                 Entry_Item liga.Equipos
                 Set piColumnSpan to 6
-                Set psLabel to "Equipos Actuales:"
-                Set pbEnabled to False
-            End_Object 
+                Set psLabel      to "Equipos Actuales:"
+                Set pbEnabled    to False
+            End_Object
 
             Object oligaEquiposMax is a cWebForm
                 Entry_Item liga.EquiposMax
                 Set piColumnSpan to 6
-                Set psLabel to "Límite de Equipos:"
-            End_Object 
+                Set psLabel      to "Límite de Equipos:"
+            End_Object
         End_Object
-    End_Object 
+
+        // Equipos de esta liga 
+        Object oGrpEquiposLiga is a cWebGroup
+            Set psCaption     to "Equipos de esta Liga"
+            Set piColumnCount to 12
+
+            // Boton de navegacion forward hacia EquipoSelect
+     
+            Object oBtnVerEquipos is a cWebButton
+                Set piColumnSpan    to 5
+                Set psCaption       to "Ver equipos en lista completa"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Show of oEquipoSelect
+                End_Procedure
+            End_Object
+
+            //  Lista embebida directamente en el Zoom de liga
+        
+            Object oEquiposLiga is a cWebList
+                Set piColumnSpan to 12
+                Set pbFillHeight to False
+                Set Server       to oequipo_DD
+                Set piOrdering   to 1
+
+                Object oColEquipoNombre is a cWebColumn
+                    Entry_Item equipo.Nombre
+                    Set psCaption to "Nombre del Equipo"
+                    Set piWidth   to 300
+                End_Object
+            End_Object
+
+        End_Object
+
+        //  Botones CRUD 
+        Object oGrpBotones is a cWebGroup
+            Set piColumnCount to 12
+            Set psCSSClass    to "ButtonBar"
+
+            Object oBtnNueva is a cWebButton
+                Set piColumnSpan    to 3
+                Set psCaption       to "Nueva"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Clear of oliga_DD
+                    Send GridRefresh of oEquiposLiga
+                End_Procedure
+            End_Object
+
+            Object oBtnGuardar is a cWebButton
+                Set piColumnSpan    to 3
+                Set psCaption       to "Guardar"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Request_Save of oliga_DD
+                    If (Err) Begin
+                        Send ShowInfoBox "Error al guardar. Verifica los datos."
+                    End
+                    Else Begin
+                        Send ShowInfoBox "Liga guardada correctamente."
+                    End
+                End_Procedure
+            End_Object
+
+            Object oBtnEliminar is a cWebButton
+                Set piColumnSpan    to 3
+                Set psCaption       to "Eliminar"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    If (liga.ID > 0) Begin
+                        Send Request_Delete of oliga_DD
+                        If (Err) Begin
+                            Send ShowInfoBox "No se puede eliminar. Tiene equipos asociados."
+                        End
+                        Else Begin
+                            Send ShowInfoBox "Liga eliminada."
+                            Send Clear of oliga_DD
+                            Send GridRefresh of oEquiposLiga
+                        End
+                    End
+                End_Procedure
+            End_Object
+
+            Object oBtnVolver is a cWebButton
+                Set piColumnSpan    to 3
+                Set psCaption       to "Volver"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Show of oLigaSelect
+                End_Procedure
+            End_Object
+        End_Object
+
+    End_Object
+
+    // Al mostrar la ficha refrescamos la lista embebida de equipos
+    Procedure OnShow
+        Forward Send OnShow
+        Send GridRefresh of oEquiposLiga
+    End_Procedure
+
 End_Object

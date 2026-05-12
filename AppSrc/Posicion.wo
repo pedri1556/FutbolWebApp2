@@ -1,31 +1,100 @@
-﻿// C:\DataFlex Projects\FutbolWebApp2\AppSrc\Posicion.wo
+﻿// Posicion.wo  Ficha de Posición (vtZoom) con CRUD completo
 Use cWebView.pkg
 Use cWebPanel.pkg
 Use cWebForm.pkg
+Use cWebGroup.pkg
+Use cWebButton.pkg
 
 Use cposicionDataDictionary.dd
 
 Object oPosicion is a cWebView
-    Set piMaxWidth to 400
-    Set psCaption to "Ficha de Posición"
-    Set peViewType to vtZoom
+    Set piMaxWidth  to 450
+    Set psCaption   to "Ficha de Posición"
+    Set peViewType  to vtZoom
 
     Object oposicion_DD is a cposicionDataDictionary
-    End_Object 
+    End_Object
 
     Set Main_DD to oposicion_DD
     Set Server  to oposicion_DD
 
     Object oWebMainPanel is a cWebPanel
-        Object oPosID is a cWebForm
-            Entry_Item posicion.ID
-            Set psLabel to "ID:"
-            Set pbEnabled to False
-        End_Object 
+        Set piColumnCount to 12
 
-        Object oPosNombre is a cWebForm
-            Entry_Item posicion.Nombre
-            Set psLabel to "Nombre Posición:"
-        End_Object 
-    End_Object 
+        Object oGrpPos is a cWebGroup
+            Set psCaption     to "Datos de la Posición"
+            Set piColumnCount to 12
+
+            Object oPosID is a cWebForm
+                Entry_Item posicion.ID
+                Set piColumnSpan to 3
+                Set psLabel      to "ID:"
+                Set pbEnabled    to False
+            End_Object
+
+            Object oPosNombre is a cWebForm
+                Entry_Item posicion.Nombre
+                Set piColumnSpan to 9
+                Set psLabel      to "Nombre de la Posición:"
+            End_Object
+        End_Object
+
+        // Botones 
+        Object oGrpBotones is a cWebGroup
+            Set piColumnCount to 12
+            Set psCSSClass    to "ButtonBar"
+
+            Object oBtnNueva is a cWebButton
+                Set piColumnSpan    to 3
+                Set psCaption       to "Nueva"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Clear of oposicion_DD
+                End_Procedure
+            End_Object
+
+            Object oBtnGuardar is a cWebButton
+                Set piColumnSpan    to 3
+                Set psCaption       to "Guardar"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Request_Save of oposicion_DD
+                    If (Err) Begin
+                        Send ShowInfoBox "Error al guardar la posici├│n."
+                    End
+                    Else Begin
+                        Send ShowInfoBox "Posici├│n guardada correctamente."
+                    End
+                End_Procedure
+            End_Object
+
+            Object oBtnEliminar is a cWebButton
+                Set piColumnSpan    to 3
+                Set psCaption       to "Eliminar"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    If (posicion.ID > 0) Begin
+                        Send Request_Delete of oposicion_DD
+                        If (Err) Begin
+                            Send ShowInfoBox "No se puede eliminar. Puede estar asignada a jugadores."
+                        End
+                        Else Begin
+                            Send ShowInfoBox "Posición eliminada."
+                            Send Clear of oposicion_DD
+                        End
+                    End
+                End_Procedure
+            End_Object
+
+            Object oBtnVolver is a cWebButton
+                Set piColumnSpan    to 3
+                Set psCaption       to "Volver"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Show of oPosicionSelect
+                End_Procedure
+            End_Object
+        End_Object
+
+    End_Object
 End_Object

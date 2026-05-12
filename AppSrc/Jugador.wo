@@ -1,30 +1,43 @@
-﻿// C:\DataFlex Projects\FutbolWebApp2\AppSrc\Jugador.wo
-// Jugador
-//
+﻿// Jugador.wo  Ficha del Jugador (vtZoom) con CRUD completo
 Use cWebView.pkg
 Use cWebPanel.pkg
 Use cWebForm.pkg
 Use cWebGroup.pkg
+Use cWebButton.pkg
+Use cWebList.pkg
+Use cWebColumn.pkg
 
 Use cligaDataDictionary.dd
 Use cequipoDataDictionary.dd
 Use cjugadorDataDictionary.dd
+Use cjugadorposicionDataDictionary.dd
+Use cposicionDataDictionary.dd
 
 Object oJugador is a cWebView
-    Set piMaxWidth to 700
-    Set psCaption to "Ficha del Jugador"
-    Set peViewType to vtZoom 
+    Set piMaxWidth  to 750
+    Set psCaption   to "Ficha del Jugador"
+    Set peViewType  to vtZoom
 
+    // Cadena principal: liga -> equipo -> jugador
     Object oliga_DD is a cligaDataDictionary
-    End_Object 
+    End_Object
 
     Object oequipo_DD is a cequipoDataDictionary
         Set DDO_Server to oliga_DD
-    End_Object 
+    End_Object
 
     Object ojugador_DD is a cjugadorDataDictionary
         Set DDO_Server to oequipo_DD
-    End_Object 
+    End_Object
+
+    // Cadena puente: jugador -> jugadorposicion <- posicion 
+    Object oposicion_DD is a cposicionDataDictionary
+    End_Object
+
+    Object ojugadorposicion_DD is a cjugadorposicionDataDictionary
+        Set DDO_Server to ojugador_DD
+        Set DDO_Server to oposicion_DD
+    End_Object
 
     Set Main_DD to ojugador_DD
     Set Server  to ojugador_DD
@@ -32,40 +45,170 @@ Object oJugador is a cWebView
     Object oWebMainPanel is a cWebPanel
         Set piColumnCount to 12
 
-        Object oDatosPersonales is a cWebGroup
-            Set psCaption to "Datos Personales"
+        //  Datos Personales
+        Object oGrpPersonal is a cWebGroup
+            Set psCaption     to "Datos Personales"
             Set piColumnCount to 12
 
             Object ojugadorID is a cWebForm
                 Entry_Item jugador.ID
                 Set piColumnSpan to 3
-                Set psLabel to "ID:"
-                Set pbEnabled to False
-            End_Object 
+                Set psLabel      to "ID:"
+                Set pbEnabled    to False
+            End_Object
 
             Object ojugadorNombre is a cWebForm
                 Entry_Item jugador.Nombre
                 Set piColumnSpan to 9
-                Set psLabel to "Nombre:"
-            End_Object 
+                Set psLabel      to "Nombre:"
+            End_Object
 
             Object ojugadorApellido is a cWebForm
                 Entry_Item jugador.Apellido
                 Set piColumnSpan to 12
-                Set psLabel to "Apellido:"
-            End_Object 
+                Set psLabel      to "Apellido:"
+            End_Object
         End_Object
 
-        Object oDatosEquipo is a cWebGroup
-            Set psCaption to "Club"
+        // Club 
+        Object oGrpClub is a cWebGroup
+            Set psCaption     to "Club"
             Set piColumnCount to 12
 
             Object oequipoNombre is a cWebForm
                 Entry_Item equipo.Nombre
+                Set piColumnSpan   to 12
+                Set psLabel        to "Equipo:"
+                Set pbPromptButton to True
+            End_Object
+
+            Object oligaNombre is a cWebForm
+                Entry_Item liga.Nombre
                 Set piColumnSpan to 12
-                Set psLabel to "Equipo:"
-                Set pbPromptButton to True 
-            End_Object 
-        End_Object 
-    End_Object 
+                Set psLabel      to "Liga:"
+                Set pbEnabled    to False
+            End_Object
+        End_Object
+
+        //  Posiciones asignadas al jugador 
+        Object oGrpPosicion is a cWebGroup
+            Set psCaption     to "Posiciones"
+            Set piColumnCount to 12
+
+            // Lookup para asignar una posicion nueva al jugador
+            Object oposicionNombre is a cWebForm
+                Entry_Item posicion.Nombre
+                Set piColumnSpan   to 8
+                Set psLabel        to "Añadir Posición:"
+                Set pbPromptButton to True
+                Set Server         to ojugadorposicion_DD
+            End_Object
+
+            Object oBtnAddPos is a cWebButton
+                Set piColumnSpan    to 4
+                Set psCaption       to "Asignar"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Request_Save of ojugadorposicion_DD
+                    If (Err) Begin
+                        Send ShowInfoBox "Error al asignar. Selecciona una posición válida."
+                    End
+                    Else Begin
+                        Send GridRefresh of oPosicionesJugador
+                        Send Clear of ojugadorposicion_DD
+                    End
+                End_Procedure
+            End_Object
+
+            // Lista embebida de posiciones ya asignadas a este jugador
+            Object oPosicionesJugador is a cWebList
+                Set piColumnSpan to 12
+                Set pbFillHeight to False
+                Set Server       to ojugadorposicion_DD
+
+                Object oColPosNombre is a cWebColumn
+                    Entry_Item posicion.Nombre
+                    Set psCaption to "Posición Asignada"
+                    Set piWidth   to 220
+                End_Object
+            End_Object
+
+      
+            Object oBtnVerPosiciones is a cWebButton
+                Set piColumnSpan    to 6
+                Set psCaption       to "Ver catálogo de Posiciones"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Show of oPosicionSelect
+                End_Procedure
+            End_Object
+
+        End_Object
+
+        // Botones CRUD 
+        Object oGrpBotones is a cWebGroup
+            Set piColumnCount to 12
+            Set psCSSClass    to "ButtonBar"
+
+            Object oBtnNuevo is a cWebButton
+                Set piColumnSpan    to 3
+                Set psCaption       to "Nuevo"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Clear of ojugador_DD
+                    Send GridRefresh of oPosicionesJugador
+                End_Procedure
+            End_Object
+
+            Object oBtnGuardar is a cWebButton
+                Set piColumnSpan    to 3
+                Set psCaption       to "Guardar"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Request_Save of ojugador_DD
+                    If (Err) Begin
+                        Send ShowInfoBox "Error al guardar. Verifica que has seleccionado un Equipo."
+                    End
+                    Else Begin
+                        Send ShowInfoBox "Jugador guardado correctamente."
+                    End
+                End_Procedure
+            End_Object
+
+            Object oBtnEliminar is a cWebButton
+                Set piColumnSpan    to 3
+                Set psCaption       to "Eliminar"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    If (jugador.ID > 0) Begin
+                        Send Request_Delete of ojugador_DD
+                        If (Err) Begin
+                            Send ShowInfoBox "Error al eliminar. El jugador tiene posiciones asignadas."
+                        End
+                        Else Begin
+                            Send ShowInfoBox "Jugador eliminado."
+                            Send Clear of ojugador_DD
+                        End
+                    End
+                End_Procedure
+            End_Object
+
+            Object oBtnVolver is a cWebButton
+                Set piColumnSpan    to 3
+                Set psCaption       to "Volver"
+                Set pbServerOnClick to True
+                Procedure OnClick
+                    Send Show of oJugadorSelect
+                End_Procedure
+            End_Object
+        End_Object
+
+    End_Object
+
+    // Al mostrar la ficha refrescamos la lista de posiciones asignadas
+    Procedure OnShow
+        Forward Send OnShow
+        Send GridRefresh of oPosicionesJugador
+    End_Procedure
+
 End_Object
