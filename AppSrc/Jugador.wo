@@ -1,4 +1,4 @@
-﻿// Jugador.wo  Ficha del Jugador (vtZoom) con CRUD completo
+﻿// Jugador.wo Ficha del Jugador (vtZoom) con CRUD completo
 Use cWebView.pkg
 Use cWebPanel.pkg
 Use cWebForm.pkg
@@ -18,7 +18,7 @@ Object oJugador is a cWebView
     Set psCaption   to "Ficha del Jugador"
     Set peViewType  to vtZoom
 
-    // Cadena principal: liga -> equipo -> jugador
+    //  Cadena principal: liga -> equipo -> jugador 
     Object oliga_DD is a cligaDataDictionary
     End_Object
 
@@ -30,7 +30,7 @@ Object oJugador is a cWebView
         Set DDO_Server to oequipo_DD
     End_Object
 
-    // Cadena puente: jugador -> jugadorposicion <- posicion 
+    //  Cadena puente: jugador -> jugadorposicion <- posicion 
     Object oposicion_DD is a cposicionDataDictionary
     End_Object
 
@@ -45,7 +45,7 @@ Object oJugador is a cWebView
     Object oWebMainPanel is a cWebPanel
         Set piColumnCount to 12
 
-        //  Datos Personales
+        //  Datos Personales 
         Object oGrpPersonal is a cWebGroup
             Set psCaption     to "Datos Personales"
             Set piColumnCount to 12
@@ -70,7 +70,7 @@ Object oJugador is a cWebView
             End_Object
         End_Object
 
-        // Club 
+        //  Club 
         Object oGrpClub is a cWebGroup
             Set psCaption     to "Club"
             Set piColumnCount to 12
@@ -128,12 +128,13 @@ Object oJugador is a cWebView
 
                 Object oColPosNombre is a cWebColumn
                     Entry_Item posicion.Nombre
-                    Set psCaption to "Posición Asignada"
+                    Set psCaption to "Posició│n Asignada"
                     Set piWidth   to 220
                 End_Object
             End_Object
 
-      
+            //  PUNTO TAREA: Navegación Undefined->Zoom->Select
+           
             Object oBtnVerPosiciones is a cWebButton
                 Set piColumnSpan    to 6
                 Set psCaption       to "Ver catálogo de Posiciones"
@@ -145,7 +146,7 @@ Object oJugador is a cWebView
 
         End_Object
 
-        // Botones CRUD 
+        //  Botones CRUD 
         Object oGrpBotones is a cWebGroup
             Set piColumnCount to 12
             Set psCSSClass    to "ButtonBar"
@@ -208,7 +209,9 @@ Object oJugador is a cWebView
     // Al mostrar la ficha refrescamos la lista de posiciones asignadas
     Procedure OnShow
         Forward Send OnShow
+        Send Find of ojugadorposicion_DD FIRST_RECORD 1
         Send GridRefresh of oPosicionesJugador
     End_Procedure
 
 End_Object
+

@@ -1,4 +1,4 @@
-﻿// PosicionSelect.wo  Lista de Posiciones (vtSelect)
+﻿// PosicionSelect.wo Lista de Posiciones (vtSelect)
 Use cWebView.pkg
 Use cWebPanel.pkg
 Use cWebList.pkg
@@ -60,6 +60,8 @@ Object oPosicionSelect is a cWebView
 
     Procedure OnShow
         Forward Send OnShow
+        Send Clear of oposicion_DD
+        Send Find of oposicion_DD FIRST_RECORD 1
         Send GridRefresh of oPosicionList
     End_Procedure
 

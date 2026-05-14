@@ -88,6 +88,8 @@ Object oEntrenadorSelect is a cWebView
 
     Procedure OnShow
         Forward Send OnShow
+        Send Clear of oentrenador_DD
+        Send Find of oentrenador_DD FIRST_RECORD 1
         Send GridRefresh of oEntrenadorList
     End_Procedure
 

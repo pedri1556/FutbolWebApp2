@@ -15,7 +15,7 @@ Object oLiga is a cWebView
     Set psCaption   to "Ficha de Liga"
     Set peViewType  to vtZoom
 
-    // Liga es el servidor; equipo es cliente
+    // Liga es el servidor; equipo es cliente (relación padre->hijo en el DD)
     Object oliga_DD is a cligaDataDictionary
     End_Object
 
@@ -30,7 +30,7 @@ Object oLiga is a cWebView
     Object oWebMainPanel is a cWebPanel
         Set piColumnCount to 12
 
-        // Datos generales 
+        //  Datos generales 
         Object oGrpInfo is a cWebGroup
             Set psCaption     to "Información de la Competición"
             Set piColumnCount to 12
@@ -55,7 +55,7 @@ Object oLiga is a cWebView
             End_Object
         End_Object
 
-        //  Configuracion de equipos 
+        //  Configuración de equipos 
         Object oGrpConfigEquipos is a cWebGroup
             Set psCaption     to "Configuración de Equipos"
             Set piColumnCount to 12
@@ -74,13 +74,11 @@ Object oLiga is a cWebView
             End_Object
         End_Object
 
-        // Equipos de esta liga 
+        //  Equipos de esta liga 
         Object oGrpEquiposLiga is a cWebGroup
             Set psCaption     to "Equipos de esta Liga"
             Set piColumnCount to 12
 
-            // Boton de navegacion forward hacia EquipoSelect
-     
             Object oBtnVerEquipos is a cWebButton
                 Set piColumnSpan    to 5
                 Set psCaption       to "Ver equipos en lista completa"
@@ -90,8 +88,8 @@ Object oLiga is a cWebView
                 End_Procedure
             End_Object
 
-            //  Lista embebida directamente en el Zoom de liga
-        
+            //Lista embebida directamente en el Zoom de liga
+
             Object oEquiposLiga is a cWebList
                 Set piColumnSpan to 12
                 Set pbFillHeight to False
@@ -171,6 +169,7 @@ Object oLiga is a cWebView
     // Al mostrar la ficha refrescamos la lista embebida de equipos
     Procedure OnShow
         Forward Send OnShow
+        Send Find of oequipo_DD FIRST_RECORD 1
         Send GridRefresh of oEquiposLiga
     End_Procedure
 

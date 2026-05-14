@@ -1,4 +1,4 @@
-﻿// LigaSelect.wo  Lista de Ligas (vtSelect)
+﻿// LigaSelect.wo  ÔÇô Lista de Ligas (vtSelect)
 Use cWebView.pkg
 Use cWebPanel.pkg
 Use cWebList.pkg
@@ -23,7 +23,7 @@ Object oLigaSelect is a cWebView
     Object oWebMainPanel is a cWebPanel
         Set piColumnCount to 12
 
-        //  Barra de botones superior 
+        // Barra de botones superior 
         Object oBarraTop is a cWebGroup
             Set piColumnCount to 12
             Set psCSSClass    to "ButtonBar"
@@ -72,7 +72,7 @@ Object oLigaSelect is a cWebView
 
             Object oColMax is a cWebColumn
                 Entry_Item liga.EquiposMax
-                Set psCaption to "Mix."
+                Set psCaption to "Max."
                 Set piWidth   to 80
             End_Object
         End_Object
@@ -81,6 +81,8 @@ Object oLigaSelect is a cWebView
 
     Procedure OnShow
         Forward Send OnShow
+        Send Clear of oliga_DD
+        Send Find of oliga_DD FIRST_RECORD 1
         Send GridRefresh of oLigaList
     End_Procedure
 

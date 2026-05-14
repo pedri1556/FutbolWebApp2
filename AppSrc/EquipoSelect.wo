@@ -1,4 +1,4 @@
-﻿// EquipoSelect.wo  Lista de Equipos (vtSelect)
+﻿// EquipoSelect.wo Lista de Equipos (vtSelect)
 Use cWebView.pkg
 Use cWebPanel.pkg
 Use cWebList.pkg
@@ -71,6 +71,8 @@ Object oEquipoSelect is a cWebView
 
     Procedure OnShow
         Forward Send OnShow
+        Send Clear of oequipo_DD
+        Send Find of oequipo_DD FIRST_RECORD 1
         Send GridRefresh of oEquipoList
     End_Procedure
 
