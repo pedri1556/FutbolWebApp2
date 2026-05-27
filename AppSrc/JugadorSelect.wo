@@ -43,7 +43,7 @@ Object oJugadorSelect is a cWebView
                 Set pbServerOnClick to True
                 Procedure OnClick
                     Send Clear of ojugador_DD
-                    Send Show of oJugador
+                    Send NavigatePath of oJugador
                 End_Procedure
             End_Object
         End_Object
@@ -56,7 +56,7 @@ Object oJugadorSelect is a cWebView
 
             Procedure OnSelect String sRowId
                 Forward Send OnSelect sRowId
-                Send Show of oJugador
+                Send NavigatePath of oJugador
             End_Procedure
 
             Object oColNombre is a cWebColumn

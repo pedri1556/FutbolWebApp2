@@ -128,7 +128,7 @@ Object oJugador is a cWebView
 
                 Object oColPosNombre is a cWebColumn
                     Entry_Item posicion.Nombre
-                    Set psCaption to "Posició│n Asignada"
+                    Set psCaption to "Posición Asignada"
                     Set piWidth   to 220
                 End_Object
             End_Object
@@ -140,7 +140,7 @@ Object oJugador is a cWebView
                 Set psCaption       to "Ver catálogo de Posiciones"
                 Set pbServerOnClick to True
                 Procedure OnClick
-                    Send Show of oPosicionSelect
+                    Send NavigatePath of oPosicionSelect
                 End_Procedure
             End_Object
 
@@ -199,7 +199,7 @@ Object oJugador is a cWebView
                 Set psCaption       to "Volver"
                 Set pbServerOnClick to True
                 Procedure OnClick
-                    Send Show of oJugadorSelect
+                    Send NavigatePath of oJugadorSelect
                 End_Procedure
             End_Object
         End_Object

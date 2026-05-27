@@ -135,7 +135,7 @@ Object oEntrenador is a cWebView
                 Set psCaption       to "Volver"
                 Set pbServerOnClick to True
                 Procedure OnClick
-                    Send Show of oEntrenadorSelect
+                    Send NavigatePath of oEntrenadorSelect
                 End_Procedure
             End_Object
         End_Object

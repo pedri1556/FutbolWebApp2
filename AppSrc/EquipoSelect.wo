@@ -38,7 +38,7 @@ Object oEquipoSelect is a cWebView
                 Set pbServerOnClick to True
                 Procedure OnClick
                     Send Clear of oequipo_DD
-                    Send Show of oEquipo
+                    Send NavigatePath of oEquipo
                 End_Procedure
             End_Object
         End_Object
@@ -51,7 +51,7 @@ Object oEquipoSelect is a cWebView
 
             Procedure OnSelect String sRowId
                 Forward Send OnSelect sRowId
-                Send Show of oEquipo
+                Send NavigatePath of oEquipo
             End_Procedure
 
             Object oColNombre is a cWebColumn

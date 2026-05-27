@@ -91,7 +91,7 @@ Object oPosicion is a cWebView
                 Set psCaption       to "Volver"
                 Set pbServerOnClick to True
                 Procedure OnClick
-                    Send Show of oPosicionSelect
+                    Send NavigatePath of oPosicionSelect
                 End_Procedure
             End_Object
         End_Object

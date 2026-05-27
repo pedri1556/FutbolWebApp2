@@ -22,6 +22,7 @@ Object oLiga is a cWebView
     // oequipo_DD como cliente de oliga_DD: solo vería equipos de la liga actual
     Object oequipo_DD is a cequipoDataDictionary
         Set DDO_Server to oliga_DD
+        Constrain equipo.LigaID eq liga.ID
     End_Object
 
     Set Main_DD to oliga_DD
@@ -84,7 +85,7 @@ Object oLiga is a cWebView
                 Set psCaption       to "Ver equipos en lista completa"
                 Set pbServerOnClick to True
                 Procedure OnClick
-                    Send Show of oEquipoSelect
+                    Send NavigatePath of oEquipoSelect
                 End_Procedure
             End_Object
 
@@ -159,7 +160,7 @@ Object oLiga is a cWebView
                 Set psCaption       to "Volver"
                 Set pbServerOnClick to True
                 Procedure OnClick
-                    Send Show of oLigaSelect
+                    Send NavigatePath of oLigaSelect
                 End_Procedure
             End_Object
         End_Object

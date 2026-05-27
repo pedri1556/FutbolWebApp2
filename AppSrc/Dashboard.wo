@@ -28,7 +28,7 @@ Object oDashboard is a cWebView
             Set psCSSClass      to "Tile Dark"
             Set psHtml to '<div class="WebCon_Sizer"><div class="Tile_Title">­Ligas</div></div>'
             Procedure OnClick String sId String sParam
-                Send Show of oLigaSelect
+                Send NavigatePath of oLigaSelect
             End_Procedure
         End_Object
 
@@ -39,7 +39,7 @@ Object oDashboard is a cWebView
             Set psCSSClass      to "Tile LightAlternate"
             Set psHtml to '<div class="WebCon_Sizer"><div class="Tile_Title">Equipos</div></div>'
             Procedure OnClick String sId String sParam
-                Send Show of oEquipoSelect
+                Send NavigatePath of oEquipoSelect
             End_Procedure
         End_Object
 
@@ -50,7 +50,7 @@ Object oDashboard is a cWebView
             Set psCSSClass      to "Tile Dark"
             Set psHtml to '<div class="WebCon_Sizer"><div class="Tile_Title">Entrenadores</div></div>'
             Procedure OnClick String sId String sParam
-                Send Show of oEntrenadorSelect
+                Send NavigatePath of oEntrenadorSelect
             End_Procedure
         End_Object
 
@@ -61,7 +61,7 @@ Object oDashboard is a cWebView
             Set psCSSClass      to "Tile DarkAlternate"
             Set psHtml to '<div class="WebCon_Sizer"><div class="Tile_Title">­Jugadores</div></div>'
             Procedure OnClick String sId String sParam
-                Send Show of oJugadorSelect
+                Send NavigatePath of oJugadorSelect
             End_Procedure
         End_Object
 
@@ -72,7 +72,7 @@ Object oDashboard is a cWebView
             Set psCSSClass      to "Tile Light"
             Set psHtml to '<div class="WebCon_Sizer"><div class="Tile_Title">Posiciones</div></div>'
             Procedure OnClick String sId String sParam
-                Send Show of oPosicionSelect
+                Send NavigatePath of oPosicionSelect
             End_Procedure
         End_Object
 

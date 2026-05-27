@@ -1,4 +1,4 @@
-﻿// LigaSelect.wo  ÔÇô Lista de Ligas (vtSelect)
+﻿// LigaSelect.wo Lista de Ligas (vtSelect)
 Use cWebView.pkg
 Use cWebPanel.pkg
 Use cWebList.pkg
@@ -34,7 +34,7 @@ Object oLigaSelect is a cWebView
                 Set pbServerOnClick to True
                 Procedure OnClick
                     Send Clear of oliga_DD
-                    Send Show of oLiga
+                    Send NavigatePath of oLiga
                 End_Procedure
             End_Object
         End_Object
@@ -49,7 +49,7 @@ Object oLigaSelect is a cWebView
             // Al hacer clic en una fila abre ficha
             Procedure OnSelect String sRowId
                 Forward Send OnSelect sRowId
-                Send Show of oLiga
+                Send NavigatePath of oLiga
             End_Procedure
 
             Object oColNombre is a cWebColumn

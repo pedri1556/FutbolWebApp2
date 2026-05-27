@@ -109,7 +109,7 @@ Object oEquipo is a cWebView
                 Set psCaption       to "Volver"
                 Set pbServerOnClick to True
                 Procedure OnClick
-                    Send Show of oEquipoSelect
+                    Send NavigatePath of oEquipoSelect
                 End_Procedure
             End_Object
         End_Object

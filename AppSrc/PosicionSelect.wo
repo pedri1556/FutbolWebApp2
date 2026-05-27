@@ -33,7 +33,7 @@ Object oPosicionSelect is a cWebView
                 Set pbServerOnClick to True
                 Procedure OnClick
                     Send Clear of oposicion_DD
-                    Send Show of oPosicion
+                    Send NavigatePath of oPosicion
                 End_Procedure
             End_Object
         End_Object
@@ -46,7 +46,7 @@ Object oPosicionSelect is a cWebView
 
             Procedure OnSelect String sRowId
                 Forward Send OnSelect sRowId
-                Send Show of oPosicion
+                Send NavigatePath of oPosicion
             End_Procedure
 
             Object oColNombre is a cWebColumn
